@@ -330,7 +330,7 @@ function () {
     var ul = document.querySelector("#liste");
     ul.innerHTML = "";
     data.forEach(function (obj) {
-      ul.insertAdjacentHTML("beforeend", "\n                <li class=".concat(obj.getType() === "Debit" ? "debit" : "credit", ">\n                ").concat(obj.getMontant(), " F ont \xE9t\xE9 ").concat(obj.getType() === "Debit" ? "Retiré" : "Déposé", "\n                par ").concat(obj.getName(), " suite ").concat(obj.getMotif(), " </li>\n                "));
+      ul.insertAdjacentHTML("beforeend", "\n                <li class=".concat(obj.getType() === "Debit" ? "debit" : "credit", ">\n                ").concat(obj.getType() === "Debit" ? "Debit:" : "Credit:", "<br>\n                ").concat(obj.getMontant(), " F ont \xE9t\xE9 ").concat(obj.getType() === "Debit" ? "Retiré" : "Déposé", "\n                par ").concat(obj.getName(), " pour ").concat(obj.getMotif(), " </li>\n                "));
     });
   };
 
@@ -370,7 +370,7 @@ function () {
         }
       });
       console.log("name:".concat(name, " totalCredit:").concat(totalCredit, " totalDebit:").concat(totalDebit));
-      table.insertAdjacentHTML("beforeend", "\n            <tr>\n                <td>".concat(name, "</td>\n                <td>").concat(totalDebit, "</td>\n                <td>").concat(totalCredit, "</td>\n            </tr>\n            "));
+      table.insertAdjacentHTML("beforeend", "\n            <tr>\n                <td>".concat(name, "</td>\n                <td>").concat(totalDebit, "</td>\n                <td>").concat(totalCredit, "</td>\n                <td>").concat(totalCredit - totalDebit, "</td>\n            </tr>\n            "));
     };
 
     for (var i = 0; i < uniqueName.length; i++) {
@@ -447,7 +447,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49777" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59353" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

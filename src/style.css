@@ -1,12 +1,14 @@
+main{
+    min-width: 805px;
+}
 form{
-    width: 90%;
+    width: 100%;
     margin: auto;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     height: 80px;
     position: relative;
     top: 20px;
-    flex-wrap: wrap;
     padding-top: 35px;
     background-color: silver;
     border-radius: 10px;
@@ -22,6 +24,7 @@ form button{
     border-radius: 8px;
     border: 2px solid blue;
 }
+
 header{
     text-align: center;
 }
@@ -30,10 +33,12 @@ header{
     justify-content: space-around; 
     position: relative;
     top: 40px;
+    background-color: rgb(195, 195, 218);
+    border-radius: 10px;
 }
 #card-left{
     width: 15%;
-    border: 2px solid black;
+    /* border: 2px solid black; */
     border-radius: 5px;
 }
 #solde{
@@ -41,9 +46,12 @@ header{
 }
 
 #transaction-list{
-    border: 2px solid black;
+    /* border: 2px solid black; */
     width: 50%;
     border-radius: 5px;
+}
+#transaction-list h3{
+    text-align: center;
 }
 #liste{
     height: 50vh;
@@ -51,15 +59,22 @@ header{
 }
 
 
+
 #card-right{
     width: 25%;
-    border: 2px solid black;
+    /* border: 2px solid black; */
     border-radius: 5px;
 }
 #transaction-autor table{
     width: 100%;
     text-align: center;
     margin-top: 10px;
+}
+#transaction-autor td, th{
+    border: solid 2px black;
+}
+#transaction-number td, th{
+    border: solid 2px black;
 }
 #state{
     width: 80%;

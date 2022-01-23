@@ -11,8 +11,9 @@ export class DrowList implements IView{
                 "beforeend",
                 `
                 <li class=${obj.getType() === "Debit" ? "debit" : "credit"}>
+                ${obj.getType() === "Debit" ? "Debit:" : "Credit:"}<br>
                 ${obj.getMontant()} F ont été ${obj.getType() === "Debit" ? "Retiré" : "Déposé"}
-                par ${obj.getName()} suite ${obj.getMotif()} </li>
+                par ${obj.getName()} pour ${obj.getMotif()} </li>
                 `
                )})
     }

@@ -30,6 +30,7 @@ export class personalTable implements IView{
                 <td>${name}</td>
                 <td>${totalDebit}</td>
                 <td>${totalCredit}</td>
+                <td>${totalCredit - totalDebit}</td>
             </tr>
             `
           );
