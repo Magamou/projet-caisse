@@ -1,2 +1,2 @@
 # projet-caisse
-utilisation de design pattern observer dans un systéme comptable
+Ce projet utilise le Design Pattern observer pour un systéme comptable.
