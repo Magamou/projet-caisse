@@ -1,25 +1,32 @@
-import { Transaction } from "./Classes/observable";
-import { List, Solde, State } from "./Classes/observer";
-import { View } from "./view/viewHandler";
-import { Personal } from "./Classes/observer";
-import { NbTransactions } from "./Classes/observer";
+import { Transaction } from "./Classes/transaction";
+import {Caisse} from './Classes/observable';
+import { solde_nbstrans_state, List, Personal } from "./Classes/observer";
+import { viewSts } from "./view/s_nt_st";
+import {DrowList} from "./view/list";
+import {personalTable} from "./view/personnal"
 
-const view=new View();
-const transaction=new Transaction();
+let htmlFullname = document.querySelector("#fullname") as HTMLInputElement;
+let htmlType = document.querySelector("#type") as HTMLSelectElement;
+let htmlMontant = document.querySelector("#montant") as HTMLInputElement;
+let htmlMotif = document.querySelector("#motif") as HTMLInputElement;
+let button = document.querySelector("#valid") as HTMLButtonElement;
 
-const list=new List(view);
-transaction.subscribe(list);
+const caisse=new Caisse(0);
 
-const personal=new Personal(view);
-transaction.subscribe(personal);
+const snc=new solde_nbstrans_state(new viewSts());
+const listTr=new List(new DrowList());
+const personal=new Personal(new personalTable());
 
-const solde=new Solde(0, view);
-transaction.subscribe(solde);
+caisse.subscribe(snc);
+caisse.subscribe(listTr);
+caisse.subscribe(personal);
 
-const nbTrans = new NbTransactions(0,new View());
-transaction.subscribe(nbTrans);
-
-const state = new State(0,new View());
-transaction.subscribe(state);
-
-
+button.addEventListener("click", (e) => {
+  const tr=new Transaction(
+      htmlFullname.value,
+      htmlType.value, 
+      +htmlMontant.value,
+      htmlMotif.value)
+      caisse.addTransaction(tr);
+      caisse.notifyObserver();
+});

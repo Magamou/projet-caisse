@@ -117,7 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"Classes/observable.ts":[function(require,module,exports) {
+})({"Classes/transaction.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -128,180 +128,125 @@ exports.Transaction = void 0;
 var Transaction =
 /** @class */
 function () {
-  function Transaction() {
-    var _this = this;
-
-    this.observers = [];
-    this.transactionList = [];
-    var htmlFullname = document.querySelector("#fullname");
-    var htmlType = document.querySelector("#type");
-    var htmlMontant = document.querySelector("#montant");
-    var htmlMotif = document.querySelector("#motif");
-    var button = document.querySelector("#valid");
-    button.addEventListener('click', function (e) {
-      _this.transactionList.push({
-        fullname: htmlFullname.value,
-        type: htmlType.value,
-        montant: +htmlMontant.value,
-        motif: htmlMotif.value
-      });
-
-      _this.notifyObserver();
-
-      htmlFullname.value = "";
-      htmlMontant.value = "";
-      htmlMotif.value = "";
-    });
+  function Transaction(name, type, montant, motif) {
+    this.name = name;
+    this.type = type;
+    this.montant = montant;
+    this.motif = motif;
   }
 
-  Transaction.prototype.subscribe = function (observer) {
-    this.observers.push(observer);
-    this.notifyObserver();
+  Transaction.prototype.getTransaction = function () {
+    return this;
   };
 
-  Transaction.prototype.unsubscribe = function (observer) {
-    this.observers = this.observers.filter(function (obs) {
-      return obs !== observer;
-    });
-    console.log("Unsubscribe--Observers Array", this.observers);
+  Transaction.prototype.getName = function () {
+    return this.name;
   };
 
-  Transaction.prototype.notifyObserver = function () {
-    var _this = this;
+  Transaction.prototype.getType = function () {
+    return this.type;
+  };
 
-    this.observers.forEach(function (element) {
-      element.update(_this.transactionList);
-    });
+  Transaction.prototype.getMontant = function () {
+    return this.montant;
+  };
+
+  Transaction.prototype.getMotif = function () {
+    return this.motif;
   };
 
   return Transaction;
 }();
 
 exports.Transaction = Transaction;
+},{}],"Classes/observable.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Caisse = void 0;
+
+var Caisse =
+/** @class */
+function () {
+  function Caisse(solde) {
+    this.solde = solde;
+    this.transactions = [];
+    this.observers = []; // console.log("Caisse Works");
+
+    this.notifyObserver();
+  }
+
+  Caisse.prototype.subscribe = function (observer) {
+    this.observers.push(observer);
+    this.notifyObserver();
+  };
+
+  Caisse.prototype.unsubscribe = function (observer) {
+    this.observers = this.observers.filter(function (obs) {
+      return obs !== observer;
+    });
+  };
+
+  Caisse.prototype.notifyObserver = function () {
+    var _this = this;
+
+    this.observers.forEach(function (obs) {
+      obs.update(_this.transactions);
+    });
+  };
+
+  Caisse.prototype.addTransaction = function (trans) {
+    this.transactions.push(trans); // console.log("Add Transaction", this.transactions);
+  };
+
+  return Caisse;
+}();
+
+exports.Caisse = Caisse;
 },{}],"Classes/observer.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Personal = exports.List = exports.State = exports.NbTransactions = exports.Solde = void 0; //class solde implementation
+exports.Personal = exports.List = exports.solde_nbstrans_state = void 0;
 
-var Solde =
+var solde_nbstrans_state =
 /** @class */
 function () {
-  function Solde(solde, view) {
-    this.solde = solde;
+  function solde_nbstrans_state(view) {
     this.view = view;
-    this.render();
+    this.t_debit = 0;
+    this.t_credit = 0;
+    this.solde = 0;
   }
 
-  Solde.prototype.update = function (data) {
-    console.log('update', data);
-    var totalDebit = 0;
-    var totalCredit = 0;
-    data.forEach(function (obj) {
-      if (obj.type === 'Debit') {
-        totalDebit += obj.montant;
-        console.log('tDeb', totalDebit);
-      }
-
-      if (obj.type === 'Credit') {
-        totalCredit += obj.montant;
-        console.log('tCred', totalCredit);
-      }
-    });
-    this.solde = totalCredit - totalDebit;
-    console.log('solde', this.solde);
-    this.render();
-  };
-
-  Solde.prototype.render = function () {
-    this.view.renderSolde(this.solde);
-  };
-
-  return Solde;
-}();
-
-exports.Solde = Solde; //Nombre de transaction
-
-var NbTransactions =
-/** @class */
-function () {
-  function NbTransactions(nb, view) {
-    this.nb = nb;
-    this.view = view;
-    this.totalDebit = 0;
-    this.totalCredit = 0;
-    this.render();
-  }
-
-  NbTransactions.prototype.update = function (data) {
-    console.log('update', data);
-    this.totalCredit = data.filter(function (obj) {
-      return obj.type === "Credit";
-    }).length;
-    this.totalDebit = data.filter(function (obj) {
-      return obj.type === "Debit";
-    }).length; // data.forEach(obj =>{
-    //     if(obj.type==='Debit'){
-    //         this.totalDebit+=obj.montant
-    //         console.log('tDeb',this.totalDebit);
-    //     }
-    //     if(obj.type === 'Credit'){
-    //         this.totalCredit+=obj.montant;
-    //         console.log('tCred',this.totalCredit);
-    //     }
-    // });
-
-    this.render();
-  };
-
-  NbTransactions.prototype.render = function () {
-    this.view.renderNbTrans(this.totalDebit, this.totalCredit);
-  };
-
-  return NbTransactions;
-}();
-
-exports.NbTransactions = NbTransactions;
-
-var State =
-/** @class */
-function () {
-  function State(nb, view) {
-    this.nb = nb;
-    this.view = view;
-    this.totalDebit = 0;
-    this.totalCredit = 0;
-    this.render();
-  }
-
-  State.prototype.update = function (data) {
+  solde_nbstrans_state.prototype.update = function (data) {
     var _this = this;
 
-    this.totalDebit = 0;
-    this.totalCredit = 0;
+    console.log("Class: solde_nbtrans_sate--", data);
+    this.solde = 0;
+    this.t_credit = 0;
+    this.t_debit = 0;
     data.forEach(function (obj) {
-      if (obj.type === 'Debit') {
-        _this.totalDebit += obj.montant;
-      }
-
-      if (obj.type === 'Credit') {
-        _this.totalCredit += obj.montant;
+      if (obj.getType() === "Debit") {
+        _this.t_debit += 1;
+        _this.solde -= obj.getMontant();
+      } else {
+        _this.t_credit += 1;
+        _this.solde += obj.getMontant();
       }
     });
-    this.render();
+    console.log("solde: ".concat(this.solde, "  tc:").concat(this.t_credit, "  td:").concat(this.t_debit));
+    this.view.Render(this.solde, this.t_credit, this.t_debit);
   };
 
-  State.prototype.render = function () {
-    var state = this.totalCredit - this.totalDebit < 0 ? 'Debiteur' : 'Crediteur';
-    this.view.renderState(state);
-  };
-
-  return State;
+  return solde_nbstrans_state;
 }();
 
-exports.State = State;
+exports.solde_nbstrans_state = solde_nbstrans_state;
 
 var List =
 /** @class */
@@ -311,7 +256,7 @@ function () {
   }
 
   List.prototype.update = function (data) {
-    this.view.renderList(data);
+    this.view.Render(data);
   };
 
   return List;
@@ -329,85 +274,115 @@ function () {
 
   Personal.prototype.update = function (data) {
     this.uniqueName = Array.from(new Set(data.map(function (obj) {
-      return obj.fullname;
+      return obj.getName();
     })));
     console.log("Update personalTrans", this.uniqueName);
-    this.view.renderPersonal(data, this.uniqueName);
+    this.view.Render(data, this.uniqueName);
   };
 
   return Personal;
 }();
 
 exports.Personal = Personal;
-},{}],"view/viewHandler.ts":[function(require,module,exports) {
+},{}],"view/s_nt_st.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.View = void 0;
+exports.viewSts = void 0;
 
-var View =
+var viewSts =
 /** @class */
 function () {
-  function View() {
+  function viewSts() {
     this.soldeValue = document.querySelector('#solde-value');
+    this.tdebit = document.querySelector('#totalDebit');
+    this.tcredit = document.querySelector('#totalCredit');
+    this.state = document.querySelector("#state-text");
   }
 
-  View.prototype.renderSolde = function (solde) {
+  viewSts.prototype.Render = function (solde, tc, td) {
     this.soldeValue.innerHTML = solde.toString();
+    this.tcredit.innerHTML = tc.toString();
+    this.tdebit.innerHTML = td.toString();
+    this.state.className = solde > 0 ? 'crediteur' : 'debiteur';
   };
 
-  View.prototype.renderNbTrans = function (totalDebit, totalCredit) {
-    document.querySelector('#totalDebit').innerHTML = totalDebit.toString();
-    document.querySelector('#totalCredit').innerHTML = totalCredit.toString();
-  };
+  return viewSts;
+}();
 
-  View.prototype.renderState = function (state) {
-    var divClass = state === 'Debiteur' ? 'debiteur' : 'crediteur';
-    document.querySelector('#state-text').className = divClass;
-    document.querySelector('#state-text').innerHTML = state;
-  };
+exports.viewSts = viewSts;
+},{}],"view/list.ts":[function(require,module,exports) {
+"use strict";
 
-  View.prototype.renderList = function (data) {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.DrowList = void 0;
+
+var DrowList =
+/** @class */
+function () {
+  function DrowList() {}
+
+  DrowList.prototype.Render = function (data) {
     var ul = document.querySelector("#liste");
     ul.innerHTML = "";
     data.forEach(function (obj) {
-      ul.insertAdjacentHTML("beforeend", "\n        <li class=".concat(obj.type === "Debit" ? "debit" : "credit", ">\n        ").concat(obj.montant, " F ont \xE9t\xE9 ").concat(obj.type === "Debit" ? "Retiré" : "Déposé", "\n        par ").concat(obj.fullname, " pour ").concat(obj.motif, " </li>\n        "));
+      ul.insertAdjacentHTML("beforeend", "\n                <li class=".concat(obj.getType() === "Debit" ? "debit" : "credit", ">\n                ").concat(obj.getMontant(), " F ont \xE9t\xE9 ").concat(obj.getType() === "Debit" ? "Retiré" : "Déposé", "\n                par ").concat(obj.getName(), " suite ").concat(obj.getMotif(), " </li>\n                "));
     });
   };
 
-  View.prototype.renderPersonal = function (data, uniqueName) {
+  return DrowList;
+}();
+
+exports.DrowList = DrowList;
+},{}],"view/personnal.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.personalTable = void 0;
+
+var personalTable =
+/** @class */
+function () {
+  function personalTable() {}
+
+  personalTable.prototype.Render = function (data, uniqueName) {
     var table = document.querySelector("#autor");
     table.innerHTML = "";
 
     var _loop_1 = function _loop_1(i) {
       var arr1 = data.filter(function (e) {
-        return e.fullname === uniqueName[i];
+        return e.getName() === uniqueName[i];
       });
-      var name = arr1[0].fullname;
+      var name = arr1[0].getName();
       var totalDebit = 0;
       var totalCredit = 0;
       arr1.forEach(function (e) {
-        if (e.type === "Debit") {
-          totalDebit += e.montant;
+        if (e.getType() === "Debit") {
+          totalDebit += e.getMontant();
         } else {
-          totalCredit += e.montant;
+          totalCredit += e.getMontant();
         }
       });
       console.log("name:".concat(name, " totalCredit:").concat(totalCredit, " totalDebit:").concat(totalDebit));
-      table.insertAdjacentHTML("beforeend", "\n        <tr>\n            <td>".concat(name, "</td>\n            <td>").concat(totalDebit, "</td>\n            <td>").concat(totalCredit, "</td>\n        </tr>\n        "));
+      table.insertAdjacentHTML("beforeend", "\n            <tr>\n                <td>".concat(name, "</td>\n                <td>").concat(totalDebit, "</td>\n                <td>").concat(totalCredit, "</td>\n            </tr>\n            "));
     };
 
     for (var i = 0; i < uniqueName.length; i++) {
       _loop_1(i);
     }
-  };
+  }; //
 
-  return View;
+
+  return personalTable;
 }();
 
-exports.View = View;
+exports.personalTable = personalTable;
 },{}],"app.ts":[function(require,module,exports) {
 "use strict";
 
@@ -415,29 +390,36 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var transaction_1 = require("./Classes/transaction");
+
 var observable_1 = require("./Classes/observable");
 
 var observer_1 = require("./Classes/observer");
 
-var viewHandler_1 = require("./view/viewHandler");
+var s_nt_st_1 = require("./view/s_nt_st");
 
-var observer_2 = require("./Classes/observer");
+var list_1 = require("./view/list");
 
-var observer_3 = require("./Classes/observer");
+var personnal_1 = require("./view/personnal");
 
-var view = new viewHandler_1.View();
-var transaction = new observable_1.Transaction();
-var list = new observer_1.List(view);
-transaction.subscribe(list);
-var personal = new observer_2.Personal(view);
-transaction.subscribe(personal);
-var solde = new observer_1.Solde(0, view);
-transaction.subscribe(solde);
-var nbTrans = new observer_3.NbTransactions(0, new viewHandler_1.View());
-transaction.subscribe(nbTrans);
-var state = new observer_1.State(0, new viewHandler_1.View());
-transaction.subscribe(state);
-},{"./Classes/observable":"Classes/observable.ts","./Classes/observer":"Classes/observer.ts","./view/viewHandler":"view/viewHandler.ts"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+var htmlFullname = document.querySelector("#fullname");
+var htmlType = document.querySelector("#type");
+var htmlMontant = document.querySelector("#montant");
+var htmlMotif = document.querySelector("#motif");
+var button = document.querySelector("#valid");
+var caisse = new observable_1.Caisse(0);
+var snc = new observer_1.solde_nbstrans_state(new s_nt_st_1.viewSts());
+var listTr = new observer_1.List(new list_1.DrowList());
+var personal = new observer_1.Personal(new personnal_1.personalTable());
+caisse.subscribe(snc);
+caisse.subscribe(listTr);
+caisse.subscribe(personal);
+button.addEventListener("click", function (e) {
+  var tr = new transaction_1.Transaction(htmlFullname.value, htmlType.value, +htmlMontant.value, htmlMotif.value);
+  caisse.addTransaction(tr);
+  caisse.notifyObserver();
+});
+},{"./Classes/transaction":"Classes/transaction.ts","./Classes/observable":"Classes/observable.ts","./Classes/observer":"Classes/observer.ts","./view/s_nt_st":"view/s_nt_st.ts","./view/list":"view/list.ts","./view/personnal":"view/personnal.ts"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -465,7 +447,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54735" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49777" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

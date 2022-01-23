@@ -1,123 +1,58 @@
 import { IObserver } from "../Interfaces/IObserver";
-import { ISubject } from "../Interfaces/ISubject";
-import { View } from "../view/viewHandler";
+import { IView } from "../Interfaces/IView";
+import { Transaction } from "./transaction";
 
-//class solde implementation
-export class Solde implements IObserver{
-    constructor(private solde:number, private view:View){
-        this.render();
-    }
-    update(data: any []) {
-        console.log('update', data);
-        let totalDebit=0;
-        let totalCredit=0;
-        data.forEach(obj =>{
-            if(obj.type==='Debit'){
-                totalDebit+=obj.montant
-                console.log('tDeb',totalDebit);
-            }
-            
-            if(obj.type === 'Credit'){
-                totalCredit+=obj.montant;
-                console.log('tCred',totalCredit);
-            }
-        });
-        this.solde=totalCredit - totalDebit;
-        console.log('solde',this.solde);
-        this.render();
-    }
-    render(){
-        this.view.renderSolde(this.solde);
-    }
-}
 
-//Nombre de transaction
-export class NbTransactions implements IObserver{
-    totalDebit=0;
-    totalCredit=0;
-    constructor(private nb:number, private view:View){
-        this.render();
-    }
-    update(data: any []) {
-        
-        console.log('update', data);
-        this.totalCredit=data.filter((obj)=>{
-            return obj.type==="Credit";
-        }).length;
-        this.totalDebit=data.filter((obj)=>{
-            return obj.type==="Debit";
-        }).length;
-        // data.forEach(obj =>{
-        //     if(obj.type==='Debit'){
-        //         this.totalDebit+=obj.montant
-        //         console.log('tDeb',this.totalDebit);
-        //     }
-            
-        //     if(obj.type === 'Credit'){
-        //         this.totalCredit+=obj.montant;
-        //         console.log('tCred',this.totalCredit);
-        //     }
-        // });
-        
-        this.render();
-    }
-    render(){
-        this.view.renderNbTrans(this.totalDebit,this.totalCredit);
-    }
-}
+export class solde_nbstrans_state implements IObserver {
+    private t_debit:number;
+    private t_credit:number;
+    private solde: number;
+  constructor(private view:IView) {
+      this.t_debit=0;
+      this.t_credit=0;
+      this.solde=0;
+  }
+  update(data: Transaction[]) {
+    console.log("Class: solde_nbtrans_sate--", data);
+    this.solde=0;
+    this.t_credit=0;
+    this.t_debit=0;
+    data.forEach((obj) => {
+      if (obj.getType() === "Debit") {
+        this.t_debit += 1;
+        this.solde-=obj.getMontant();
+      }
 
-export class State implements IObserver{
-    totalDebit=0;
-    totalCredit=0;
-    constructor(private nb:number, private view:View){
-        this.render();
-    }
-    update(data: any []) {
-        this.totalDebit=0;
-        this.totalCredit=0;
-        data.forEach(obj =>{
-            if(obj.type==='Debit'){
-                this.totalDebit+=obj.montant
-            }
-            
-            if(obj.type === 'Credit'){
-                this.totalCredit+=obj.montant;
-            }
-        });
-        
-        this.render();
-    }
-    render(){
-        let state = this.totalCredit - this.totalDebit <0?'Debiteur':'Crediteur';
-        this.view.renderState(state);
-    }
+      else{
+        this.t_credit += 1;
+        this.solde+=obj.getMontant();
+      }
+    });
+    console.log(`solde: ${this.solde}  tc:${this.t_credit}  td:${this.t_debit}`);
+    this.view.Render(this.solde, this.t_credit, this.t_debit);
+  }
 }
 
 export class List implements IObserver {
-  constructor(private view: View) {}
+  constructor(private view: IView) {}
   update(data: any[]) {
-    this.view.renderList(data);
+    this.view.Render(data);
   }
 }
-
 export class Personal implements IObserver {
   private uniqueName: any[];
-  constructor(private view: View) {
+  constructor(private view: IView) {
     console.log("personalTrans work");
   }
-  update(data: any[]) {
+  update(data: Transaction[]) {
     this.uniqueName = Array.from(
       new Set(
         data.map((obj) => {
-          return obj.fullname;
+          return obj.getName();
         })
       )
     );
     console.log("Update personalTrans", this.uniqueName);
-    this.view.renderPersonal(data, this.uniqueName);
-
-    
+    this.view.Render(data, this.uniqueName);
   }
 }
-
-
