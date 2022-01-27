@@ -1,32 +1,58 @@
-import { Transaction } from "./Classes/transaction";
-import {Caisse} from './Classes/observable';
-import { solde_nbstrans_state, List, Personal } from "./Classes/observer";
-import { viewSts } from "./view/s_nt_st";
-import {DrowList} from "./view/list";
-import {personalTable} from "./view/personnal"
+import { Dessert, Entree } from "./Classes/option";
+import { PlatDeResistance } from "./Classes/plat.resistant";
+import {IPlat}  from './Interfaces/plat';
+let choix:IPlat[]=[];
+const platSimple=new PlatDeResistance();
+choix.push(platSimple);
+console.log(`Plat de resistance: ${platSimple.prix()}`);
+renderPrice(platSimple.prix());
+// const platAvecDessert=new Dessert(platSimple);
+// console.log(`Plat de resistance + Dessert: ${platAvecDessert.prix()}`);
 
-let htmlFullname = document.querySelector("#fullname") as HTMLInputElement;
-let htmlType = document.querySelector("#type") as HTMLSelectElement;
-let htmlMontant = document.querySelector("#montant") as HTMLInputElement;
-let htmlMotif = document.querySelector("#motif") as HTMLInputElement;
-let button = document.querySelector("#valid") as HTMLButtonElement;
+// const p_ent_des=new Entree(platAvecDessert);
+// console.log(`Plat de resistance + Entree + Dessert: ${p_ent_des.prix()}`);
 
-const caisse=new Caisse(0);
 
-const snc=new solde_nbstrans_state(new viewSts());
-const listTr=new List(new DrowList());
-const personal=new Personal(new personalTable());
 
-caisse.subscribe(snc);
-caisse.subscribe(listTr);
-caisse.subscribe(personal);
+let menu=document.querySelector("#menu") as HTMLSelectElement;
 
-button.addEventListener("click", (e) => {
-  const tr=new Transaction(
-      htmlFullname.value,
-      htmlType.value, 
-      +htmlMontant.value,
-      htmlMotif.value)
-      caisse.addTransaction(tr);
-      caisse.notifyObserver();
-});
+var i=0;
+document.querySelector("#add").addEventListener("click", (e)=>{
+    if(menu.className==="open"){
+        menu.className="close";
+    }
+    else{
+        menu.className="open";
+    }
+    
+})
+
+document.querySelector("#send").addEventListener("click", (e)=>{
+    console.log("send");
+})
+let entree=document.querySelector("#entree") as HTMLInputElement;
+let dessert=document.querySelector("#dessert") as HTMLInputElement;
+
+
+dessert.addEventListener("click", (e)=>{
+    if(dessert.checked){
+        const platAvecDessert=new Dessert(choix[choix.length-1]);
+        choix.push(platAvecDessert);
+    }
+    else{
+        if(choix.length>1){
+            choix.pop();
+        }
+    }
+    renderPrice(choix[choix.length -1].prix());
+})
+//////////////functions
+function renderPrice(price:number){
+    document.querySelector("#price").innerHTML=price.toString();
+}
+function addEvent(check:HTMLInputElement, name:string){
+    let plat:IPlat;
+    switch(name){
+        
+    }
+}

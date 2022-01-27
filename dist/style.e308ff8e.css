@@ -1,100 +1,174 @@
-main{
-    min-width: 805px;
+@import url(https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap);
+
+body {
+    background: #f9f9f9;
+    font-family: "roboto", sans-serif;
 }
-form{
-    width: 100%;
-    margin: auto;
-    display: flex;
-    justify-content: space-around;
-    height: 80px;
+
+.main-content {
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.food-card {
+    background: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 30px;
+    -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    -webkit-transition: 0.1s;
+    transition: 0.1s;
+}
+.food-card:hover {
+    -webkit-box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.food-card .food-card_img {
+    display: block;
     position: relative;
+}
+
+.food-card .food-card_img img {
+    width: 100%;
+    height: 200px;
+    -o-object-fit: cover;
+    object-fit: cover;
+}
+
+.food-card .food-card_img i {
+    position: absolute;
     top: 20px;
-    padding-top: 35px;
-    background-color: silver;
-    border-radius: 10px;
+    right: 30px;
+    color: #fff;
+    font-size: 25px;
+    -webkit-transition: all 0.1s;
+    transition: all 0.1s;
 }
-form button{
-    height: 30px;
-}
-.form-control{
-    font-size: 14px;
-    font-weight: 600;
-    outline: none;
-    padding: 10px;
-    border-radius: 8px;
-    border: 2px solid blue;
+.food-card .food-card_img i:hover {
+    top: 18px;
+    right: 28px;
+    font-size: 29px;
 }
 
-header{
-    text-align: center;
+.food-card .food-card_content {
+    padding: 15px;
 }
-.observers-space{
+
+.food-card .food-card_content .food-card_title-section {
+    height: 100px;
+    overflow: hidden;
+}
+
+.food-card .food-card_content .food-card_title-section .food-card_title {
+    font-size: 24px;
+    color: #333;
+    font-weight: 500;
+    display: block;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.food-card .food-card_content .food-card_title-section .food-card_author {
+    font-size: 15px;
+    display: block;
+}
+
+.food-card .food-card_content .food-card_bottom-section .space-between {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: space-around; 
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+
+.food-card .food-card_content .food-card_bottom-section .food-card_subscribers {
+    margin-left: 17px;
+}
+
+.food-card .food-card_content .food-card_bottom-section .food-card_subscribers img,
+.food-card .food-card_content .food-card_bottom-section .food-card_subscribers .food-card_subscribers-count {
+    height: 45px;
+    width: 45px;
+    border-radius: 45px;
+    border: 3px solid #fff;
+    margin-left: -17px;
+    float: left;
+    background: #f5f5f5;
+}
+
+.food-card .food-card_content .food-card_bottom-section .food-card_subscribers .food-card_subscribers-count {
     position: relative;
-    top: 40px;
-    background-color: rgb(195, 195, 218);
-    border-radius: 10px;
-}
-#card-left{
-    width: 15%;
-    /* border: 2px solid black; */
-    border-radius: 5px;
-}
-#solde{
-    display: flex; 
 }
 
-#transaction-list{
-    /* border: 2px solid black; */
-    width: 50%;
-    border-radius: 5px;
+.food-card .food-card_content .food-card_bottom-section .food-card_subscribers .food-card_subscribers-count span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    font-size: 13px;
 }
-#transaction-list h3{
+
+.food-card .food-card_content .food-card_bottom-section .food-card_price {
+    font-size: 28px;
+    font-weight: 500;
+    color: #F47A00;
+}
+
+.food-card .food-card_content .food-card_bottom-section .food-card_order-count {
+    width: 130px;
+}
+
+.food-card .food-card_content .food-card_bottom-section .food-card_order-count input {
+    background: #f5f5f5;
+    border-color: #f5f5f5;
+    -webkit-box-shadow: none;
+    box-shadow: none;
     text-align: center;
 }
-#liste{
-    height: 50vh;
-    overflow: auto;
+
+.food-card .food-card_content .food-card_bottom-section .food-card_order-count button {
+    border-color: #f5f5f5;
+    border-width: 3px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+@media (min-width: 992px) {
+    .food-card--vertical {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        position: relative;
+        height: 235px;
+    }
+
+    .food-card--vertical .food-card_img img {
+        width: 200px;
+        height: 100%;
+        -o-object-fit: cover;
+        object-fit: cover;
+    }
 }
 
 
-
-#card-right{
-    width: 25%;
-    /* border: 2px solid black; */
-    border-radius: 5px;
+.close{
+    display: none;
 }
-#transaction-autor table{
-    width: 100%;
-    text-align: center;
-    margin-top: 10px;
-}
-#transaction-autor td, th{
-    border: solid 2px black;
-}
-#transaction-number td, th{
-    border: solid 2px black;
-}
-#state{
-    width: 80%;
-    margin: auto;
-    display: flex;
-    justify-content: center;
-}
-.credit{
-    background-color: green;
-    border-bottom: solid 2px white;
-}
-.debit{
-    background-color: red;
-    border-bottom: solid 2px white;
-}
-.debiteur{
-    background-color: red;
-}
-.crediteur{
-    background-color: green;
+.open{
+    display: block;
 }
 
 /*# sourceMappingURL=/style.e308ff8e.css.map */

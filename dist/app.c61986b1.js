@@ -117,309 +117,245 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"Classes/transaction.ts":[function(require,module,exports) {
+})({"Classes/plat.resistant.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Transaction = void 0;
+exports.PlatAvecOption = exports.PlatDeResistance = void 0;
 
-var Transaction =
+var PlatDeResistance =
 /** @class */
 function () {
-  function Transaction(name, type, montant, motif) {
-    this.name = name;
-    this.type = type;
-    this.montant = montant;
-    this.motif = motif;
-  }
+  function PlatDeResistance() {}
 
-  Transaction.prototype.getTransaction = function () {
-    return this;
+  PlatDeResistance.prototype.prix = function () {
+    return 5000;
   };
 
-  Transaction.prototype.getName = function () {
-    return this.name;
-  };
-
-  Transaction.prototype.getType = function () {
-    return this.type;
-  };
-
-  Transaction.prototype.getMontant = function () {
-    return this.montant;
-  };
-
-  Transaction.prototype.getMotif = function () {
-    return this.motif;
-  };
-
-  return Transaction;
+  return PlatDeResistance;
 }();
 
-exports.Transaction = Transaction;
-},{}],"Classes/observable.ts":[function(require,module,exports) {
-"use strict";
+exports.PlatDeResistance = PlatDeResistance;
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Caisse = void 0;
-
-var Caisse =
+var PlatAvecOption =
 /** @class */
 function () {
-  function Caisse(solde) {
-    this.solde = solde;
-    this.transactions = [];
-    this.observers = []; // console.log("Caisse Works");
-
-    this.notifyObserver();
+  function PlatAvecOption(_plat) {
+    this.plat = _plat;
   }
 
-  Caisse.prototype.subscribe = function (observer) {
-    this.observers.push(observer);
-    this.notifyObserver();
+  PlatAvecOption.prototype.prix = function () {
+    return this.plat.prix();
   };
 
-  Caisse.prototype.unsubscribe = function (observer) {
-    this.observers = this.observers.filter(function (obs) {
-      return obs !== observer;
-    });
-  };
-
-  Caisse.prototype.notifyObserver = function () {
-    var _this = this;
-
-    this.observers.forEach(function (obs) {
-      obs.update(_this.transactions);
-    });
-  };
-
-  Caisse.prototype.addTransaction = function (trans) {
-    this.transactions.push(trans); // console.log("Add Transaction", this.transactions);
-  };
-
-  return Caisse;
+  return PlatAvecOption;
 }();
 
-exports.Caisse = Caisse;
-},{}],"Classes/observer.ts":[function(require,module,exports) {
+exports.PlatAvecOption = PlatAvecOption;
+},{}],"Classes/option.ts":[function(require,module,exports) {
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Personal = exports.List = exports.solde_nbstrans_state = void 0;
-
-var solde_nbstrans_state =
-/** @class */
-function () {
-  function solde_nbstrans_state(view) {
-    this.view = view;
-    this.t_debit = 0;
-    this.t_credit = 0;
-    this.solde = 0;
-  }
-
-  solde_nbstrans_state.prototype.update = function (data) {
-    var _this = this;
-
-    console.log("Class: solde_nbtrans_sate--", data);
-    this.solde = 0;
-    this.t_credit = 0;
-    this.t_debit = 0;
-    data.forEach(function (obj) {
-      if (obj.getType() === "Debit") {
-        _this.t_debit += 1;
-        _this.solde -= obj.getMontant();
-      } else {
-        _this.t_credit += 1;
-        _this.solde += obj.getMontant();
+var __extends = this && this.__extends || function () {
+  var _extendStatics = function extendStatics(d, b) {
+    _extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) {
+        if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
       }
-    });
-    console.log("solde: ".concat(this.solde, "  tc:").concat(this.t_credit, "  td:").concat(this.t_debit));
-    this.view.Render(this.solde, this.t_credit, this.t_debit);
-  };
-
-  return solde_nbstrans_state;
-}();
-
-exports.solde_nbstrans_state = solde_nbstrans_state;
-
-var List =
-/** @class */
-function () {
-  function List(view) {
-    this.view = view;
-  }
-
-  List.prototype.update = function (data) {
-    this.view.Render(data);
-  };
-
-  return List;
-}();
-
-exports.List = List;
-
-var Personal =
-/** @class */
-function () {
-  function Personal(view) {
-    this.view = view;
-    console.log("personalTrans work");
-  }
-
-  Personal.prototype.update = function (data) {
-    this.uniqueName = Array.from(new Set(data.map(function (obj) {
-      return obj.getName();
-    })));
-    console.log("Update personalTrans", this.uniqueName);
-    this.view.Render(data, this.uniqueName);
-  };
-
-  return Personal;
-}();
-
-exports.Personal = Personal;
-},{}],"view/s_nt_st.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.viewSts = void 0;
-
-var viewSts =
-/** @class */
-function () {
-  function viewSts() {
-    this.soldeValue = document.querySelector('#solde-value');
-    this.tdebit = document.querySelector('#totalDebit');
-    this.tcredit = document.querySelector('#totalCredit');
-    this.state = document.querySelector("#state-text");
-  }
-
-  viewSts.prototype.Render = function (solde, tc, td) {
-    this.soldeValue.innerHTML = solde.toString();
-    this.tcredit.innerHTML = tc.toString();
-    this.tdebit.innerHTML = td.toString();
-    this.state.className = solde > 0 ? 'crediteur' : 'debiteur';
-  };
-
-  return viewSts;
-}();
-
-exports.viewSts = viewSts;
-},{}],"view/list.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.DrowList = void 0;
-
-var DrowList =
-/** @class */
-function () {
-  function DrowList() {}
-
-  DrowList.prototype.Render = function (data) {
-    var ul = document.querySelector("#liste");
-    ul.innerHTML = "";
-    data.forEach(function (obj) {
-      ul.insertAdjacentHTML("beforeend", "\n                <li class=".concat(obj.getType() === "Debit" ? "debit" : "credit", ">\n                ").concat(obj.getType() === "Debit" ? "Debit:" : "Credit:", "<br>\n                ").concat(obj.getMontant(), " F ont \xE9t\xE9 ").concat(obj.getType() === "Debit" ? "Retiré" : "Déposé", "\n                par ").concat(obj.getName(), " pour ").concat(obj.getMotif(), " </li>\n                "));
-    });
-  };
-
-  return DrowList;
-}();
-
-exports.DrowList = DrowList;
-},{}],"view/personnal.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.personalTable = void 0;
-
-var personalTable =
-/** @class */
-function () {
-  function personalTable() {}
-
-  personalTable.prototype.Render = function (data, uniqueName) {
-    var table = document.querySelector("#autor");
-    table.innerHTML = "";
-
-    var _loop_1 = function _loop_1(i) {
-      var arr1 = data.filter(function (e) {
-        return e.getName() === uniqueName[i];
-      });
-      var name = arr1[0].getName();
-      var totalDebit = 0;
-      var totalCredit = 0;
-      arr1.forEach(function (e) {
-        if (e.getType() === "Debit") {
-          totalDebit += e.getMontant();
-        } else {
-          totalCredit += e.getMontant();
-        }
-      });
-      console.log("name:".concat(name, " totalCredit:").concat(totalCredit, " totalDebit:").concat(totalDebit));
-      table.insertAdjacentHTML("beforeend", "\n            <tr>\n                <td>".concat(name, "</td>\n                <td>").concat(totalDebit, "</td>\n                <td>").concat(totalCredit, "</td>\n                <td>").concat(totalCredit - totalDebit, "</td>\n            </tr>\n            "));
     };
 
-    for (var i = 0; i < uniqueName.length; i++) {
-      _loop_1(i);
+    return _extendStatics(d, b);
+  };
+
+  return function (d, b) {
+    if (typeof b !== "function" && b !== null) throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+
+    _extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
     }
-  }; //
 
-
-  return personalTable;
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
 }();
 
-exports.personalTable = personalTable;
-},{}],"app.ts":[function(require,module,exports) {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Livraison = exports.Cafe = exports.The = exports.Boisson = exports.Dessert = exports.Entree = void 0;
+
+var plat_resistant_1 = require("./plat.resistant");
+
+var Entree =
+/** @class */
+function (_super) {
+  __extends(Entree, _super);
+
+  function Entree() {
+    return _super !== null && _super.apply(this, arguments) || this;
+  }
+
+  Entree.prototype.prix = function () {
+    return _super.prototype.prix.call(this) + 2000;
+  };
+
+  return Entree;
+}(plat_resistant_1.PlatAvecOption);
+
+exports.Entree = Entree;
+
+var Dessert =
+/** @class */
+function (_super) {
+  __extends(Dessert, _super);
+
+  function Dessert() {
+    return _super !== null && _super.apply(this, arguments) || this;
+  }
+
+  Dessert.prototype.prix = function () {
+    return _super.prototype.prix.call(this) + 1500;
+  };
+
+  return Dessert;
+}(plat_resistant_1.PlatAvecOption);
+
+exports.Dessert = Dessert;
+
+var Boisson =
+/** @class */
+function (_super) {
+  __extends(Boisson, _super);
+
+  function Boisson() {
+    return _super !== null && _super.apply(this, arguments) || this;
+  }
+
+  Boisson.prototype.prix = function () {
+    return _super.prototype.prix.call(this) + 1000;
+  };
+
+  return Boisson;
+}(plat_resistant_1.PlatAvecOption);
+
+exports.Boisson = Boisson;
+
+var The =
+/** @class */
+function (_super) {
+  __extends(The, _super);
+
+  function The() {
+    return _super !== null && _super.apply(this, arguments) || this;
+  }
+
+  The.prototype.prix = function () {
+    return _super.prototype.prix.call(this) + 700;
+  };
+
+  return The;
+}(plat_resistant_1.PlatAvecOption);
+
+exports.The = The;
+
+var Cafe =
+/** @class */
+function (_super) {
+  __extends(Cafe, _super);
+
+  function Cafe() {
+    return _super !== null && _super.apply(this, arguments) || this;
+  }
+
+  Cafe.prototype.prix = function () {
+    return _super.prototype.prix.call(this) + 350;
+  };
+
+  return Cafe;
+}(plat_resistant_1.PlatAvecOption);
+
+exports.Cafe = Cafe;
+
+var Livraison =
+/** @class */
+function (_super) {
+  __extends(Livraison, _super);
+
+  function Livraison() {
+    return _super !== null && _super.apply(this, arguments) || this;
+  }
+
+  Livraison.prototype.prix = function () {
+    return _super.prototype.prix.call(this) + 1000;
+  };
+
+  return Livraison;
+}(plat_resistant_1.PlatAvecOption);
+
+exports.Livraison = Livraison;
+},{"./plat.resistant":"Classes/plat.resistant.ts"}],"app.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var transaction_1 = require("./Classes/transaction");
+var option_1 = require("./Classes/option");
 
-var observable_1 = require("./Classes/observable");
+var plat_resistant_1 = require("./Classes/plat.resistant");
 
-var observer_1 = require("./Classes/observer");
+var choix = [];
+var platSimple = new plat_resistant_1.PlatDeResistance();
+choix.push(platSimple);
+console.log("Plat de resistance: ".concat(platSimple.prix()));
+renderPrice(platSimple.prix()); // const platAvecDessert=new Dessert(platSimple);
+// console.log(`Plat de resistance + Dessert: ${platAvecDessert.prix()}`);
+// const p_ent_des=new Entree(platAvecDessert);
+// console.log(`Plat de resistance + Entree + Dessert: ${p_ent_des.prix()}`);
 
-var s_nt_st_1 = require("./view/s_nt_st");
-
-var list_1 = require("./view/list");
-
-var personnal_1 = require("./view/personnal");
-
-var htmlFullname = document.querySelector("#fullname");
-var htmlType = document.querySelector("#type");
-var htmlMontant = document.querySelector("#montant");
-var htmlMotif = document.querySelector("#motif");
-var button = document.querySelector("#valid");
-var caisse = new observable_1.Caisse(0);
-var snc = new observer_1.solde_nbstrans_state(new s_nt_st_1.viewSts());
-var listTr = new observer_1.List(new list_1.DrowList());
-var personal = new observer_1.Personal(new personnal_1.personalTable());
-caisse.subscribe(snc);
-caisse.subscribe(listTr);
-caisse.subscribe(personal);
-button.addEventListener("click", function (e) {
-  var tr = new transaction_1.Transaction(htmlFullname.value, htmlType.value, +htmlMontant.value, htmlMotif.value);
-  caisse.addTransaction(tr);
-  caisse.notifyObserver();
+var menu = document.querySelector("#menu");
+var i = 0;
+document.querySelector("#add").addEventListener("click", function (e) {
+  if (menu.className === "open") {
+    menu.className = "close";
+  } else {
+    menu.className = "open";
+  }
 });
-},{"./Classes/transaction":"Classes/transaction.ts","./Classes/observable":"Classes/observable.ts","./Classes/observer":"Classes/observer.ts","./view/s_nt_st":"view/s_nt_st.ts","./view/list":"view/list.ts","./view/personnal":"view/personnal.ts"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+document.querySelector("#send").addEventListener("click", function (e) {
+  console.log("send");
+});
+var entree = document.querySelector("#entree");
+var dessert = document.querySelector("#dessert");
+dessert.addEventListener("click", function (e) {
+  if (dessert.checked) {
+    var platAvecDessert = new option_1.Dessert(choix[choix.length - 1]);
+    choix.push(platAvecDessert);
+  } else {
+    if (choix.length > 1) {
+      choix.pop();
+    }
+  }
+
+  renderPrice(choix[choix.length - 1].prix());
+}); //////////////functions
+
+function renderPrice(price) {
+  document.querySelector("#price").innerHTML = price.toString();
+}
+
+function addEvent(check, name) {
+  var plat;
+
+  switch (name) {}
+}
+},{"./Classes/option":"Classes/option.ts","./Classes/plat.resistant":"Classes/plat.resistant.ts"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -447,7 +383,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59353" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52215" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
