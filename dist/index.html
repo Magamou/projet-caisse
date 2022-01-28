@@ -15,14 +15,14 @@
     </header>
     <section class="main-content">
         <div class="container">
-            <h1 class="text-center text-uppercase">Food Order Card</h1>
+            <h1 class="text-center text-uppercase">Menu du jour</h1>
             <br>
             <br>
-            <div class="row">
+            <div class="row justify-content-center">
                 <div class="col-sm-10 col-md-10 col-lg-10">
                     <div class="food-card">
                         <div class="food-card_img">
-                            <img src="https://i.imgur.com/eFWRUuR.jpg" alt="">
+                            <img src="https://www.cahierderecettes.com/wp-content/uploads/2018/02/tiep-bou-dieun.jpg" width="100px" alt="">
                             <a href="#!"><i class="far fa-heart"></i></a>
                         </div>
                         <div class="food-card_content">
@@ -31,26 +31,23 @@
                                 <a href="#!" class="food-card_author">Riz au Poisson</a>
                             </div>
                             <div class="food-card_bottom-section">
-                                <div class="space-between">
-
-                                    <div class="pull-right">
-                                        <span class="badge badge-success">Veg</span>
+                                <div class="row justify-content-around">
+                                    <div class="col-10 close" id="table-container">
+                                        <h3 class="text-center">Details commande</h3>
+                                        <table class="table col-10" width="100%">
+                                            <thead>
+                                                
+                                                <tr><th scope="col">commande</th><th scope="col">prix</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                
+                                            </tbody>
+                                            <tfoot>
+    
+                                            </tfoot>
+                                        </table>
                                     </div>
-                                </div>
-                                <div>
                                     
-                                    <table class="close" cellspacing="10px">
-                                        <thead>
-                                            <tr><th colspan="2">Details Commandes</th></tr>
-                                            <tr><th>commande</th><th>prix</th></tr>
-                                        </thead>
-                                        <tbody>
-                                            
-                                        </tbody>
-                                        <tfoot>
-
-                                        </tfoot>
-                                    </table>
                                 </div>
                                 <hr>
                                 <i class="fa fa-plus btn btn-success" id="add"></i>

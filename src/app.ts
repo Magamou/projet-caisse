@@ -7,10 +7,12 @@ let option:string[]=[];
 let menu=document.querySelector("#menu") as HTMLSelectElement;
 let arr:HTMLInputElement[]=Array.from(menu.querySelectorAll("input"));
 let platSimple:IPlat=new PlatDeResistance();
+let tableContainer=document.querySelector("#table-container");
 let table=document.querySelector("table");
 let tbody=table.querySelector("tbody");
 let tfoot=table.querySelector("tfoot");
-let total=0;
+let total=platSimple.prix();
+
 choix.push(platSimple);
 console.log(`Plat de resistance: ${platSimple.prix()}`);
 renderPrice(platSimple.prix());
@@ -23,7 +25,7 @@ document.querySelector("#add").addEventListener("click", (e)=>{
     }
     else{
         menu.className="open";
-        table.className="close";
+        tableContainer.className="close";
     }
     
 })
@@ -57,14 +59,14 @@ document.querySelector("#send").addEventListener("click", (e)=>{
         // console.log(_input.value);
         // console.log(e, " ", (<HTMLInputElement>document.querySelector("#"+e)).value)
         tbody.insertAdjacentHTML("beforeend", `
-        <tr> <td>${e}</td> <td>${(<HTMLInputElement>document.querySelector("#"+e)).value}</td> </tr>
+        <tr> <td >${e}</td> <td>${(<HTMLInputElement>document.querySelector("#"+e)).value}</td> </tr>
         `)
     })
     // console.log(`total des achats ${total}`);
     tfoot.insertAdjacentHTML("beforeend", `
         <tr> <td>total</td> <td>${total}</td> </tr>
         `)
-    table.className="open";
+        tableContainer.className="open";
 })
 
 

@@ -171,6 +171,7 @@ a {
     display: block;
 }
 
-tfoot{
-    background-color: silver;
+th, td{
+    width: 200px;
+    border: solid 1px black;
 }

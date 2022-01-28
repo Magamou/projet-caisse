@@ -316,10 +316,11 @@ var option = [];
 var menu = document.querySelector("#menu");
 var arr = Array.from(menu.querySelectorAll("input"));
 var platSimple = new plat_resistant_1.PlatDeResistance();
+var tableContainer = document.querySelector("#table-container");
 var table = document.querySelector("table");
 var tbody = table.querySelector("tbody");
 var tfoot = table.querySelector("tfoot");
-var total = 0;
+var total = platSimple.prix();
 choix.push(platSimple);
 console.log("Plat de resistance: ".concat(platSimple.prix()));
 renderPrice(platSimple.prix());
@@ -328,7 +329,7 @@ document.querySelector("#add").addEventListener("click", function (e) {
     menu.className = "close";
   } else {
     menu.className = "open";
-    table.className = "close";
+    tableContainer.className = "close";
   }
 });
 arr.forEach(function (e) {
@@ -354,11 +355,11 @@ document.querySelector("#send").addEventListener("click", function (e) {
     // let _input=document.querySelector("#"+e) as HTMLInputElement
     // console.log(_input.value);
     // console.log(e, " ", (<HTMLInputElement>document.querySelector("#"+e)).value)
-    tbody.insertAdjacentHTML("beforeend", "\n        <tr> <td>".concat(e, "</td> <td>").concat(document.querySelector("#" + e).value, "</td> </tr>\n        "));
+    tbody.insertAdjacentHTML("beforeend", "\n        <tr> <td >".concat(e, "</td> <td>").concat(document.querySelector("#" + e).value, "</td> </tr>\n        "));
   }); // console.log(`total des achats ${total}`);
 
   tfoot.insertAdjacentHTML("beforeend", "\n        <tr> <td>total</td> <td>".concat(total, "</td> </tr>\n        "));
-  table.className = "open";
+  tableContainer.className = "open";
 }); //////////////functions
 
 function renderPrice(price) {
@@ -424,7 +425,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61105" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51714" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
