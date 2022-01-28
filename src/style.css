@@ -170,3 +170,7 @@ a {
 .open{
     display: block;
 }
+
+tfoot{
+    background-color: silver;
+}

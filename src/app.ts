@@ -1,58 +1,102 @@
-import { Dessert, Entree } from "./Classes/option";
+import { Boisson, Cafe, Dessert, Entree, Livraison, The } from "./Classes/option";
 import { PlatDeResistance } from "./Classes/plat.resistant";
 import {IPlat}  from './Interfaces/plat';
+//declaration
 let choix:IPlat[]=[];
-const platSimple=new PlatDeResistance();
+let option:string[]=[];
+let menu=document.querySelector("#menu") as HTMLSelectElement;
+let arr:HTMLInputElement[]=Array.from(menu.querySelectorAll("input"));
+let platSimple:IPlat=new PlatDeResistance();
+let table=document.querySelector("table");
+let tbody=table.querySelector("tbody");
+let tfoot=table.querySelector("tfoot");
+let total=0;
 choix.push(platSimple);
 console.log(`Plat de resistance: ${platSimple.prix()}`);
 renderPrice(platSimple.prix());
-// const platAvecDessert=new Dessert(platSimple);
-// console.log(`Plat de resistance + Dessert: ${platAvecDessert.prix()}`);
-
-// const p_ent_des=new Entree(platAvecDessert);
-// console.log(`Plat de resistance + Entree + Dessert: ${p_ent_des.prix()}`);
 
 
 
-let menu=document.querySelector("#menu") as HTMLSelectElement;
-
-var i=0;
 document.querySelector("#add").addEventListener("click", (e)=>{
     if(menu.className==="open"){
         menu.className="close";
     }
     else{
         menu.className="open";
+        table.className="close";
     }
     
 })
 
-document.querySelector("#send").addEventListener("click", (e)=>{
-    console.log("send");
-})
-let entree=document.querySelector("#entree") as HTMLInputElement;
-let dessert=document.querySelector("#dessert") as HTMLInputElement;
-
-
-dessert.addEventListener("click", (e)=>{
-    if(dessert.checked){
-        const platAvecDessert=new Dessert(choix[choix.length-1]);
-        choix.push(platAvecDessert);
-    }
-    else{
-        if(choix.length>1){
-            choix.pop();
+arr.forEach((e)=>{
+    e.addEventListener("click", (event:Event)=>{
+        if(e.checked){
+            option.push(e.name);
+            // platSimple=getPlat(platSimple, e.name);
+            // console.log("price", platSimple.prix());
         }
-    }
-    renderPrice(choix[choix.length -1].prix());
+        else{
+            option=option.filter((opt)=>{
+                return opt !== e.name;
+            })
+        }
+        total=decoration(option, platSimple);
+    })    
 })
+
+
+document.querySelector("#send").addEventListener("click", (e)=>{
+    tbody.innerHTML="";
+    tfoot.innerHTML="";
+    menu.className="close";
+    tbody.insertAdjacentHTML("beforeend", `
+        <tr> <td>Plat principal</td> <td>5000</td> </tr>
+        `)
+    option.forEach((e)=>{
+        // let _input=document.querySelector("#"+e) as HTMLInputElement
+        // console.log(_input.value);
+        // console.log(e, " ", (<HTMLInputElement>document.querySelector("#"+e)).value)
+        tbody.insertAdjacentHTML("beforeend", `
+        <tr> <td>${e}</td> <td>${(<HTMLInputElement>document.querySelector("#"+e)).value}</td> </tr>
+        `)
+    })
+    // console.log(`total des achats ${total}`);
+    tfoot.insertAdjacentHTML("beforeend", `
+        <tr> <td>total</td> <td>${total}</td> </tr>
+        `)
+    table.className="open";
+})
+
+
+
+
 //////////////functions
 function renderPrice(price:number){
     document.querySelector("#price").innerHTML=price.toString();
 }
-function addEvent(check:HTMLInputElement, name:string){
-    let plat:IPlat;
-    switch(name){
-        
+
+function getPlat(plat:IPlat, decoration:string):IPlat{
+    switch(decoration){
+        case "entree":
+            return new Entree(plat);
+        case "dessert":
+            return new Dessert(plat);
+        case "boisson":
+            return new Boisson(plat);
+        case "the":
+            return new The(plat);
+        case "cafe":
+            return new Cafe(plat);
+        case "livraison":
+            return new Livraison(plat);
     }
+}
+function decoration(arr:string[], plat:IPlat):number{
+    // let p:IPlat=new PlatDeResistance();
+    arr.forEach((elem)=>{
+        plat=getPlat(plat, elem);
+    })
+    // console.log(plat.prix());
+    renderPrice(plat.prix());
+    return plat.prix();
 }

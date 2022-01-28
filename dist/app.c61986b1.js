@@ -308,52 +308,93 @@ Object.defineProperty(exports, "__esModule", {
 
 var option_1 = require("./Classes/option");
 
-var plat_resistant_1 = require("./Classes/plat.resistant");
+var plat_resistant_1 = require("./Classes/plat.resistant"); //declaration
+
 
 var choix = [];
+var option = [];
+var menu = document.querySelector("#menu");
+var arr = Array.from(menu.querySelectorAll("input"));
 var platSimple = new plat_resistant_1.PlatDeResistance();
+var table = document.querySelector("table");
+var tbody = table.querySelector("tbody");
+var tfoot = table.querySelector("tfoot");
+var total = 0;
 choix.push(platSimple);
 console.log("Plat de resistance: ".concat(platSimple.prix()));
-renderPrice(platSimple.prix()); // const platAvecDessert=new Dessert(platSimple);
-// console.log(`Plat de resistance + Dessert: ${platAvecDessert.prix()}`);
-// const p_ent_des=new Entree(platAvecDessert);
-// console.log(`Plat de resistance + Entree + Dessert: ${p_ent_des.prix()}`);
-
-var menu = document.querySelector("#menu");
-var i = 0;
+renderPrice(platSimple.prix());
 document.querySelector("#add").addEventListener("click", function (e) {
   if (menu.className === "open") {
     menu.className = "close";
   } else {
     menu.className = "open";
+    table.className = "close";
   }
+});
+arr.forEach(function (e) {
+  e.addEventListener("click", function (event) {
+    if (e.checked) {
+      option.push(e.name); // platSimple=getPlat(platSimple, e.name);
+      // console.log("price", platSimple.prix());
+    } else {
+      option = option.filter(function (opt) {
+        return opt !== e.name;
+      });
+    }
+
+    total = decoration(option, platSimple);
+  });
 });
 document.querySelector("#send").addEventListener("click", function (e) {
-  console.log("send");
-});
-var entree = document.querySelector("#entree");
-var dessert = document.querySelector("#dessert");
-dessert.addEventListener("click", function (e) {
-  if (dessert.checked) {
-    var platAvecDessert = new option_1.Dessert(choix[choix.length - 1]);
-    choix.push(platAvecDessert);
-  } else {
-    if (choix.length > 1) {
-      choix.pop();
-    }
-  }
+  tbody.innerHTML = "";
+  tfoot.innerHTML = "";
+  menu.className = "close";
+  tbody.insertAdjacentHTML("beforeend", "\n        <tr> <td>Plat principal</td> <td>5000</td> </tr>\n        ");
+  option.forEach(function (e) {
+    // let _input=document.querySelector("#"+e) as HTMLInputElement
+    // console.log(_input.value);
+    // console.log(e, " ", (<HTMLInputElement>document.querySelector("#"+e)).value)
+    tbody.insertAdjacentHTML("beforeend", "\n        <tr> <td>".concat(e, "</td> <td>").concat(document.querySelector("#" + e).value, "</td> </tr>\n        "));
+  }); // console.log(`total des achats ${total}`);
 
-  renderPrice(choix[choix.length - 1].prix());
+  tfoot.insertAdjacentHTML("beforeend", "\n        <tr> <td>total</td> <td>".concat(total, "</td> </tr>\n        "));
+  table.className = "open";
 }); //////////////functions
 
 function renderPrice(price) {
   document.querySelector("#price").innerHTML = price.toString();
 }
 
-function addEvent(check, name) {
-  var plat;
+function getPlat(plat, decoration) {
+  switch (decoration) {
+    case "entree":
+      return new option_1.Entree(plat);
 
-  switch (name) {}
+    case "dessert":
+      return new option_1.Dessert(plat);
+
+    case "boisson":
+      return new option_1.Boisson(plat);
+
+    case "the":
+      return new option_1.The(plat);
+
+    case "cafe":
+      return new option_1.Cafe(plat);
+
+    case "livraison":
+      return new option_1.Livraison(plat);
+  }
+}
+
+function decoration(arr, plat) {
+  // let p:IPlat=new PlatDeResistance();
+  arr.forEach(function (elem) {
+    plat = getPlat(plat, elem);
+  }); // console.log(plat.prix());
+
+  renderPrice(plat.prix());
+  return plat.prix();
 }
 },{"./Classes/option":"Classes/option.ts","./Classes/plat.resistant":"Classes/plat.resistant.ts"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -383,7 +424,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52215" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61105" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
